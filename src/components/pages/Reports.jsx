@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import ApperIcon from "@/components/ApperIcon";
 import { employeeService } from "@/services/api/employeeService";
 import { departmentService } from "@/services/api/departmentService";
+import ApperIcon from "@/components/ApperIcon";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
+import Card from "@/components/atoms/Card";
+import Employees from "@/components/pages/Employees";
 
 const Reports = () => {
   const [employees, setEmployees] = useState([]);
@@ -45,14 +46,14 @@ const Reports = () => {
 
   // Calculate metrics
   const totalEmployees = employees.length;
-  const activeEmployees = employees.filter(emp => emp.status === "active").length;
-  const totalSalary = employees.reduce((sum, emp) => sum + (emp.salary || 0), 0);
+const activeEmployees = employees.filter(emp => emp.status_c === "active").length;
+  const totalSalary = employees.reduce((sum, emp) => sum + (emp.salary_c || 0), 0);
   const avgSalary = totalEmployees > 0 ? totalSalary / totalEmployees : 0;
 
   // Department analytics
   const departmentAnalytics = departments.map(dept => {
-    const deptEmployees = employees.filter(emp => emp.department === dept.name);
-    const deptSalary = deptEmployees.reduce((sum, emp) => sum + (emp.salary || 0), 0);
+const deptEmployees = employees.filter(emp => emp.department_c?.Name === (dept.name_c || dept.Name));
+    const deptSalary = deptEmployees.reduce((sum, emp) => sum + (emp.salary_c || 0), 0);
     
     return {
       name: dept.name,
@@ -64,13 +65,12 @@ const Reports = () => {
     };
   });
 
-  // Status distribution
+// Status distribution
   const statusDistribution = {
-    active: employees.filter(emp => emp.status === "active").length,
-    inactive: employees.filter(emp => emp.status === "inactive").length,
-    onLeave: employees.filter(emp => emp.status === "on-leave").length
+    active: employees.filter(emp => emp.status_c === "active").length,
+    inactive: employees.filter(emp => emp.status_c === "inactive").length,
+    onLeave: employees.filter(emp => emp.status_c === "on-leave").length
   };
-
   const periodOptions = [
     { value: "current", label: "Current Period" },
     { value: "quarterly", label: "Quarterly" },
@@ -205,7 +205,7 @@ const Reports = () => {
                         <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center mr-3">
                           <ApperIcon name="Building" className="text-blue-600" size={16} />
                         </div>
-                        <span className="font-medium text-gray-900">{dept.name}</span>
+<span className="font-medium text-gray-900">{dept.name_c || dept.Name}</span>
                       </div>
                     </td>
                     <td className="py-4 px-4 text-center text-gray-900">{dept.employeeCount}</td>

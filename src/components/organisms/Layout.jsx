@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
+import { useSelector } from "react-redux";
+import { AuthContext } from "../../App";
+import Sidebar from "@/components/organisms/Sidebar";
+import Header from "@/components/organisms/Header";
 
-const Layout = () => {
+function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    window.location.href = '/login';
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -15,6 +25,8 @@ const Layout = () => {
           onMobileMenuToggle={() => setSidebarOpen(true)}
           title="StaffHub Pro"
           subtitle="Employee Management System"
+          user={user}
+          onLogout={logout}
         />
         
         <main className="py-6">
@@ -25,6 +37,6 @@ const Layout = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Layout;

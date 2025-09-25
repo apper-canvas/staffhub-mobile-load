@@ -104,39 +104,39 @@ const EmployeeTable = ({ employees, onView, onEdit, onDelete }) => {
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">
-                        {employee.firstName} {employee.lastName}
+{employee.first_name_c} {employee.last_name_c}
                       </div>
                     </div>
                   </div>
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{employee.position}</div>
+<div className="text-sm text-gray-900">{employee.position_c}</div>
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <ApperIcon name="Building" className="text-gray-400 mr-2" size={14} />
-                    <span className="text-sm text-gray-900">{employee.department}</span>
+<span className="text-sm text-gray-900">{employee.department_c?.Name || 'N/A'}</span>
                   </div>
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{employee.email}</div>
-                  <div className="text-sm text-gray-500">{employee.phone}</div>
+<div className="text-sm text-gray-900">{employee.email_c}</div>
+                  <div className="text-sm text-gray-500">{employee.phone_c}</div>
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {employee.startDate ? format(new Date(employee.startDate), "MMM dd, yyyy") : "N/A"}
+{employee.start_date_c ? format(new Date(employee.start_date_c), "MMM dd, yyyy") : "N/A"}
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {formatSalary(employee.salary)}
+{formatSalary(employee.salary_c)}
                 </td>
                 
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <Badge variant={statusColors[employee.status]} size="sm">
-                    {employee.status === "on-leave" ? "On Leave" : employee.status.charAt(0).toUpperCase() + employee.status.slice(1)}
+<Badge variant={statusColors[employee.status_c]} size="sm">
+                    {employee.status_c === "on-leave" ? "On Leave" : employee.status_c?.charAt(0).toUpperCase() + employee.status_c?.slice(1)}
                   </Badge>
                 </td>
                 

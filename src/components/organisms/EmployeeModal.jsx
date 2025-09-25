@@ -11,35 +11,35 @@ import { departmentService } from "@/services/api/departmentService";
 const EmployeeModal = ({ isOpen, onClose, employee, onSave }) => {
   const [loading, setLoading] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    position: "",
-    department: "",
-    startDate: "",
-    status: "active",
-    salary: "",
-    manager: ""
+const [formData, setFormData] = useState({
+    first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    position_c: "",
+    department_c: "",
+    start_date_c: "",
+    status_c: "active",
+    salary_c: "",
+    manager_c: ""
   });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (isOpen) {
       loadDepartments();
-      if (employee) {
+if (employee) {
         setFormData({
-          firstName: employee.firstName || "",
-          lastName: employee.lastName || "",
-          email: employee.email || "",
-          phone: employee.phone || "",
-          position: employee.position || "",
-          department: employee.department || "",
-          startDate: employee.startDate ? employee.startDate.split('T')[0] : "",
-          status: employee.status || "active",
-          salary: employee.salary ? employee.salary.toString() : "",
-          manager: employee.manager || ""
+          first_name_c: employee.first_name_c || "",
+          last_name_c: employee.last_name_c || "",
+          email_c: employee.email_c || "",
+          phone_c: employee.phone_c || "",
+          position_c: employee.position_c || "",
+          department_c: employee.department_c?.Id || "",
+          start_date_c: employee.start_date_c ? employee.start_date_c.split('T')[0] : "",
+          status_c: employee.status_c || "active",
+          salary_c: employee.salary_c ? employee.salary_c.toString() : "",
+          manager_c: employee.manager_c || ""
         });
       } else {
         setFormData({
@@ -62,9 +62,9 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSave }) => {
   const loadDepartments = async () => {
     try {
       const departmentData = await departmentService.getAll();
-      setDepartments(departmentData.map(dept => ({
-        value: dept.name,
-        label: dept.name
+setDepartments(departmentData.map(dept => ({
+        value: dept.Id,
+        label: dept.name_c || dept.Name
       })));
     } catch (error) {
       console.error("Failed to load departments:", error);
@@ -74,21 +74,21 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSave }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
+if (!formData.first_name_c.trim()) newErrors.first_name_c = "First name is required";
+    if (!formData.last_name_c.trim()) newErrors.last_name_c = "Last name is required";
+    if (!formData.email_c.trim()) {
+      newErrors.email_c = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email_c)) {
+      newErrors.email_c = "Please enter a valid email address";
     }
-    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!formData.position.trim()) newErrors.position = "Position is required";
-    if (!formData.department) newErrors.department = "Department is required";
-    if (!formData.startDate) newErrors.startDate = "Start date is required";
-    if (!formData.salary) {
-      newErrors.salary = "Salary is required";
-    } else if (isNaN(formData.salary) || parseFloat(formData.salary) <= 0) {
-      newErrors.salary = "Please enter a valid salary amount";
+    if (!formData.phone_c.trim()) newErrors.phone_c = "Phone number is required";
+    if (!formData.position_c.trim()) newErrors.position_c = "Position is required";
+    if (!formData.department_c) newErrors.department_c = "Department is required";
+    if (!formData.start_date_c) newErrors.start_date_c = "Start date is required";
+    if (!formData.salary_c) {
+      newErrors.salary_c = "Salary is required";
+    } else if (isNaN(formData.salary_c) || parseFloat(formData.salary_c) <= 0) {
+      newErrors.salary_c = "Please enter a valid salary amount";
     }
 
     setErrors(newErrors);
@@ -106,11 +106,11 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSave }) => {
     setLoading(true);
     
     try {
-      const employeeData = {
+const employeeData = {
         ...formData,
-        salary: parseFloat(formData.salary),
-        createdAt: employee ? employee.createdAt : new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        salary_c: parseFloat(formData.salary_c),
+        created_at_c: employee ? employee.created_at_c : new Date().toISOString(),
+        updated_at_c: new Date().toISOString()
       };
 
       let savedEmployee;
@@ -185,103 +185,103 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSave }) => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Input
-                      name="firstName"
+name="first_name_c"
                       label="First Name"
-                      value={formData.firstName}
+                      value={formData.first_name_c}
                       onChange={handleInputChange}
-                      error={errors.firstName}
+                      error={errors.first_name_c}
                       required
                       icon="User"
                     />
 
                     <Input
-                      name="lastName"
+                      name="last_name_c"
                       label="Last Name"
-                      value={formData.lastName}
+                      value={formData.last_name_c}
                       onChange={handleInputChange}
-                      error={errors.lastName}
+                      error={errors.last_name_c}
                       required
                       icon="User"
                     />
 
                     <Input
-                      name="email"
+                      name="email_c"
                       label="Email Address"
                       type="email"
-                      value={formData.email}
+                      value={formData.email_c}
                       onChange={handleInputChange}
-                      error={errors.email}
+                      error={errors.email_c}
                       required
                       icon="Mail"
                     />
 
                     <Input
-                      name="phone"
+                      name="phone_c"
                       label="Phone Number"
-                      value={formData.phone}
+                      value={formData.phone_c}
                       onChange={handleInputChange}
-                      error={errors.phone}
+                      error={errors.phone_c}
                       required
                       icon="Phone"
                     />
 
                     <Input
-                      name="position"
+                      name="position_c"
                       label="Position"
-                      value={formData.position}
+                      value={formData.position_c}
                       onChange={handleInputChange}
-                      error={errors.position}
+                      error={errors.position_c}
                       required
                       icon="Briefcase"
                     />
 
                     <Select
-                      name="department"
+                      name="department_c"
                       label="Department"
-                      value={formData.department}
+                      value={formData.department_c}
                       onChange={handleInputChange}
                       options={departments}
-                      error={errors.department}
+                      error={errors.department_c}
                       required
                       placeholder="Select department..."
                     />
 
                     <Input
-                      name="startDate"
+                      name="start_date_c"
                       label="Start Date"
                       type="date"
-                      value={formData.startDate}
+                      value={formData.start_date_c}
                       onChange={handleInputChange}
-                      error={errors.startDate}
+                      error={errors.start_date_c}
                       required
                       icon="Calendar"
                     />
 
                     <Select
-                      name="status"
+                      name="status_c"
                       label="Status"
-                      value={formData.status}
+                      value={formData.status_c}
                       onChange={handleInputChange}
                       options={statusOptions}
                       required
                     />
 
                     <Input
-                      name="salary"
+                      name="salary_c"
                       label="Annual Salary"
                       type="number"
-                      value={formData.salary}
+                      value={formData.salary_c}
                       onChange={handleInputChange}
-                      error={errors.salary}
+                      error={errors.salary_c}
                       required
                       icon="DollarSign"
                       placeholder="Enter salary amount"
                     />
 
                     <Input
-                      name="manager"
+                      name="manager_c"
                       label="Manager"
-                      value={formData.manager}
+                      value={formData.manager_c}
                       onChange={handleInputChange}
                       icon="UserCheck"
                       placeholder="Enter manager name"

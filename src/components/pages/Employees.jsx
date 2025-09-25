@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import SearchBar from "@/components/molecules/SearchBar";
-import EmployeeTable from "@/components/organisms/EmployeeTable";
-import EmployeeModal from "@/components/organisms/EmployeeModal";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
 import { employeeService } from "@/services/api/employeeService";
 import { departmentService } from "@/services/api/departmentService";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import EmployeeModal from "@/components/organisms/EmployeeModal";
+import EmployeeTable from "@/components/organisms/EmployeeTable";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -56,25 +56,24 @@ const Employees = () => {
 
   const filterEmployees = () => {
     let filtered = employees;
-
-    // Search filter
+// Search filter
     if (searchTerm) {
       filtered = filtered.filter(emp =>
-        `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.position.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.department.toLowerCase().includes(searchTerm.toLowerCase())
+        `${emp.first_name_c || ''} ${emp.last_name_c || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (emp.email_c || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (emp.position_c || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (emp.department_c?.Name || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Department filter
-    if (departmentFilter) {
-      filtered = filtered.filter(emp => emp.department === departmentFilter);
+if (departmentFilter) {
+      filtered = filtered.filter(emp => emp.department_c?.Name === departmentFilter);
     }
 
-    // Status filter
+// Status filter
     if (statusFilter) {
-      filtered = filtered.filter(emp => emp.status === statusFilter);
+      filtered = filtered.filter(emp => emp.status_c === statusFilter);
     }
 
     setFilteredEmployees(filtered);
@@ -91,13 +90,13 @@ const Employees = () => {
   };
 
   const handleViewEmployee = (employee) => {
-    toast.info(`Viewing details for ${employee.firstName} ${employee.lastName}`);
+toast.info(`Viewing details for ${employee.first_name_c} ${employee.last_name_c}`);
   };
 
   const handleDeleteEmployee = async (employee) => {
-    if (window.confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`)) {
+    if (window.confirm(`Are you sure you want to delete ${employee.first_name_c} ${employee.last_name_c}?`)) {
       try {
-        await employeeService.delete(employee.Id);
+await employeeService.delete(employee.Id);
         setEmployees(prev => prev.filter(emp => emp.Id !== employee.Id));
         toast.success("Employee deleted successfully!");
       } catch (error) {
@@ -125,9 +124,9 @@ const Employees = () => {
     setStatusFilter("");
   };
 
-  const departmentOptions = departments.map(dept => ({
-    value: dept.name,
-    label: dept.name
+const departmentOptions = departments.map(dept => ({
+    value: dept.name_c || dept.Name,
+    label: dept.name_c || dept.Name
   }));
 
   const statusOptions = [

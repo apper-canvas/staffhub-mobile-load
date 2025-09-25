@@ -47,19 +47,19 @@ const Dashboard = () => {
 
   const stats = {
     totalEmployees: employees.length,
-    activeEmployees: employees.filter(emp => emp.status === "active").length,
+activeEmployees: employees.filter(emp => emp.status_c === "active").length,
     totalDepartments: departments.length,
-    onLeaveEmployees: employees.filter(emp => emp.status === "on-leave").length
+    onLeaveEmployees: employees.filter(emp => emp.status_c === "on-leave").length
   };
 
-  const recentEmployees = employees
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+const recentEmployees = employees
+    .sort((a, b) => new Date(b.created_at_c) - new Date(a.created_at_c))
     .slice(0, 5);
 
-  const departmentStats = departments.map(dept => ({
-    name: dept.name,
-    count: employees.filter(emp => emp.department === dept.name).length,
-    budget: dept.budget
+const departmentStats = departments.map(dept => ({
+    name: dept.name_c || dept.Name,
+    count: employees.filter(emp => emp.department_c?.Name === (dept.name_c || dept.Name)).length,
+    budget: dept.budget_c
   }));
 
   return (
@@ -145,10 +145,10 @@ const Dashboard = () => {
                     <ApperIcon name="User" className="text-primary-600" size={16} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      {employee.firstName} {employee.lastName}
+<p className="text-sm font-medium text-gray-900 truncate">
+                      {employee.first_name_c} {employee.last_name_c}
                     </p>
-                    <p className="text-sm text-gray-500 truncate">{employee.position}</p>
+                    <p className="text-sm text-gray-500 truncate">{employee.position_c}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-xs text-gray-500">

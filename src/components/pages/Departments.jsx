@@ -41,13 +41,13 @@ const Departments = () => {
     }
   };
 
-  const getDepartmentStats = (deptName) => {
-    const deptEmployees = employees.filter(emp => emp.department === deptName);
+const getDepartmentStats = (deptName) => {
+    const deptEmployees = employees.filter(emp => emp.department_c?.Name === deptName);
     return {
       total: deptEmployees.length,
-      active: deptEmployees.filter(emp => emp.status === "active").length,
-      onLeave: deptEmployees.filter(emp => emp.status === "on-leave").length,
-      inactive: deptEmployees.filter(emp => emp.status === "inactive").length
+      active: deptEmployees.filter(emp => emp.status_c === "active").length,
+      onLeave: deptEmployees.filter(emp => emp.status_c === "on-leave").length,
+      inactive: deptEmployees.filter(emp => emp.status_c === "inactive").length
     };
   };
 
@@ -85,8 +85,8 @@ const Departments = () => {
 
       {/* Department Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {departments.map((department, index) => {
-          const stats = getDepartmentStats(department.name);
+{departments.map((department, index) => {
+          const stats = getDepartmentStats(department.name_c || department.Name);
           
           return (
             <motion.div
@@ -102,20 +102,20 @@ const Departments = () => {
                       <ApperIcon name="Building" className="text-blue-600" size={24} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 text-lg">{department.name}</h3>
-                      <p className="text-sm text-gray-600">{department.description}</p>
+<h3 className="font-semibold text-gray-900 text-lg">{department.name_c || department.Name}</h3>
+                      <p className="text-sm text-gray-600">{department.description_c}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Department Head */}
-                {department.headOfDepartment && (
+{department.head_of_department_c && (
                   <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                     <div className="flex items-center">
                       <ApperIcon name="UserCheck" className="text-gray-400 mr-2" size={16} />
                       <span className="text-sm text-gray-600">Department Head:</span>
                       <span className="text-sm font-medium text-gray-900 ml-1">
-                        {department.headOfDepartment}
+                        {department.head_of_department_c}
                       </span>
                     </div>
                   </div>
@@ -153,7 +153,7 @@ const Departments = () => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div className="flex items-center text-sm text-gray-600">
                     <ApperIcon name="DollarSign" size={16} className="mr-1 text-gray-400" />
-                    Budget: {formatBudget(department.budget)}
+Budget: {formatBudget(department.budget_c)}
                   </div>
                 </div>
 
@@ -204,7 +204,7 @@ const Departments = () => {
             
             <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-violet-100 rounded-lg">
               <div className="text-3xl font-bold text-purple-600">
-                {formatBudget(departments.reduce((sum, dept) => sum + dept.budget, 0))}
+{formatBudget(departments.reduce((sum, dept) => sum + (dept.budget_c || 0), 0))}
               </div>
               <div className="text-sm text-purple-700 mt-1">Total Budget</div>
             </div>

@@ -1,79 +1,281 @@
-import employeesData from "@/services/mockData/employees.json";
-
 class EmployeeService {
   constructor() {
-    this.employees = [...employeesData];
+    this.tableName = 'employee_c';
+    this.apperClient = null;
+    this.initializeClient();
+  }
+
+  initializeClient() {
+    if (typeof window !== 'undefined' && window.ApperSDK) {
+      const { ApperClient } = window.ApperSDK;
+      this.apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+    }
   }
 
   async getAll() {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return [...this.employees];
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "position_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "salary_c"}},
+          {"field": {"Name": "manager_c"}},
+          {"field": {"Name": "created_at_c"}},
+          {"field": {"Name": "updated_at_c"}},
+          {"field": {"Name": "department_c"}}
+        ],
+        orderBy: [{"fieldName": "Id", "sorttype": "DESC"}],
+        pagingInfo: {"limit": 100, "offset": 0}
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching employees:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const employee = this.employees.find(emp => emp.Id === parseInt(id));
-    if (!employee) {
-      throw new Error(`Employee with ID ${id} not found`);
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "position_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "salary_c"}},
+          {"field": {"Name": "manager_c"}},
+          {"field": {"Name": "created_at_c"}},
+          {"field": {"Name": "updated_at_c"}},
+          {"field": {"Name": "department_c"}}
+        ]
+      };
+      
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params);
+      
+      if (!response?.data) {
+        throw new Error(`Employee with ID ${id} not found`);
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching employee ${id}:`, error?.response?.data?.message || error);
+      throw error;
     }
-    return { ...employee };
   }
 
   async create(employeeData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const highestId = Math.max(...this.employees.map(emp => emp.Id), 0);
-    const newEmployee = {
-      Id: highestId + 1,
-      ...employeeData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    
-    this.employees.push(newEmployee);
-    return { ...newEmployee };
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      // Only include Updateable fields based on schema
+      const params = {
+        records: [{
+          Name: `${employeeData.first_name_c || ''} ${employeeData.last_name_c || ''}`.trim(),
+          first_name_c: employeeData.first_name_c,
+          last_name_c: employeeData.last_name_c,
+          email_c: employeeData.email_c,
+          phone_c: employeeData.phone_c,
+          position_c: employeeData.position_c,
+          start_date_c: employeeData.start_date_c,
+          status_c: employeeData.status_c || 'active',
+          salary_c: parseInt(employeeData.salary_c) || 0,
+          manager_c: employeeData.manager_c,
+          created_at_c: new Date().toISOString(),
+          updated_at_c: new Date().toISOString(),
+          department_c: parseInt(employeeData.department_c) || null
+        }]
+      };
+      
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} employees:`, failed);
+          failed.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+        
+        return successful.length > 0 ? successful[0].data : null;
+      }
+    } catch (error) {
+      console.error("Error creating employee:", error?.response?.data?.message || error);
+      throw error;
+    }
   }
 
   async update(id, employeeData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const index = this.employees.findIndex(emp => emp.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Employee with ID ${id} not found`);
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      // Only include Updateable fields
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          Name: `${employeeData.first_name_c || ''} ${employeeData.last_name_c || ''}`.trim(),
+          first_name_c: employeeData.first_name_c,
+          last_name_c: employeeData.last_name_c,
+          email_c: employeeData.email_c,
+          phone_c: employeeData.phone_c,
+          position_c: employeeData.position_c,
+          start_date_c: employeeData.start_date_c,
+          status_c: employeeData.status_c,
+          salary_c: parseInt(employeeData.salary_c) || 0,
+          manager_c: employeeData.manager_c,
+          updated_at_c: new Date().toISOString(),
+          department_c: parseInt(employeeData.department_c) || null
+        }]
+      };
+      
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} employees:`, failed);
+          failed.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+        
+        return successful.length > 0 ? successful[0].data : null;
+      }
+    } catch (error) {
+      console.error("Error updating employee:", error?.response?.data?.message || error);
+      throw error;
     }
-    
-    const updatedEmployee = {
-      ...this.employees[index],
-      ...employeeData,
-      Id: parseInt(id),
-      updatedAt: new Date().toISOString()
-    };
-    
-    this.employees[index] = updatedEmployee;
-    return { ...updatedEmployee };
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const index = this.employees.findIndex(emp => emp.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Employee with ID ${id} not found`);
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      const params = { 
+        RecordIds: [parseInt(id)]
+      };
+      
+      const response = await this.apperClient.deleteRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      if (response.results) {
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} employees:`, failed);
+          failed.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error deleting employee:", error?.response?.data?.message || error);
+      throw error;
     }
-    
-    const deletedEmployee = this.employees.splice(index, 1)[0];
-    return { ...deletedEmployee };
   }
 
-  async getByDepartment(department) {
-    await new Promise(resolve => setTimeout(resolve, 250));
-    return this.employees.filter(emp => emp.department === department).map(emp => ({ ...emp }));
+  async getByDepartment(departmentId) {
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "position_c"}},
+          {"field": {"Name": "department_c"}}
+        ],
+        where: [{"FieldName": "department_c", "Operator": "EqualTo", "Values": [parseInt(departmentId)]}]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching employees by department:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 
   async getByStatus(status) {
-    await new Promise(resolve => setTimeout(resolve, 250));
-    return this.employees.filter(emp => emp.status === status).map(emp => ({ ...emp }));
+    try {
+      if (!this.apperClient) this.initializeClient();
+      
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "first_name_c"}},
+          {"field": {"Name": "last_name_c"}},
+          {"field": {"Name": "status_c"}}
+        ],
+        where: [{"FieldName": "status_c", "Operator": "EqualTo", "Values": [status]}]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+      
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching employees by status:", error?.response?.data?.message || error);
+      return [];
+    }
   }
 }
 
