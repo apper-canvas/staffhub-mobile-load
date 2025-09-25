@@ -41,18 +41,18 @@ if (employee) {
           salary_c: employee.salary_c ? employee.salary_c.toString() : "",
           manager_c: employee.manager_c || ""
         });
-      } else {
+} else {
         setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          position: "",
-          department: "",
-          startDate: "",
-          status: "active",
-          salary: "",
-          manager: ""
+          first_name_c: "",
+          last_name_c: "",
+          email_c: "",
+          phone_c: "",
+          position_c: "",
+          department_c: "",
+          start_date_c: "",
+          status_c: "active",
+          salary_c: "",
+          manager_c: ""
         });
       }
       setErrors({});
