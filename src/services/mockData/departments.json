@@ -1,0 +1,58 @@
+[
+  {
+    "Id": 1,
+    "name": "Engineering",
+    "description": "Software development and technical infrastructure",
+    "headOfDepartment": "Michael Chen",
+    "employeeCount": 4,
+    "budget": 450000
+  },
+  {
+    "Id": 2,
+    "name": "Design",
+    "description": "User experience and interface design",
+    "headOfDepartment": "Alex Rodriguez",
+    "employeeCount": 2,
+    "budget": 188000
+  },
+  {
+    "Id": 3,
+    "name": "Marketing",
+    "description": "Brand promotion and customer acquisition",
+    "headOfDepartment": "David Thompson",
+    "employeeCount": 2,
+    "budget": 150000
+  },
+  {
+    "Id": 4,
+    "name": "Human Resources",
+    "description": "Employee management and organizational development",
+    "headOfDepartment": "Robert Martinez",
+    "employeeCount": 2,
+    "budget": 160000
+  },
+  {
+    "Id": 5,
+    "name": "Sales",
+    "description": "Revenue generation and client relationships",
+    "headOfDepartment": "Kevin Anderson",
+    "employeeCount": 2,
+    "budget": 157000
+  },
+  {
+    "Id": 6,
+    "name": "Finance",
+    "description": "Financial planning and analysis",
+    "headOfDepartment": "Thomas Lee",
+    "employeeCount": 2,
+    "budget": 187000
+  },
+  {
+    "Id": 7,
+    "name": "Customer Success",
+    "description": "Client support and relationship management",
+    "headOfDepartment": "James White",
+    "employeeCount": 1,
+    "budget": 75000
+  }
+]
