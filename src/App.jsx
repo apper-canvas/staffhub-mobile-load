@@ -16,6 +16,7 @@ import Dashboard from "@/components/pages/Dashboard";
 import Employees from "@/components/pages/Employees";
 import Reports from "@/components/pages/Reports";
 import Departments from "@/components/pages/Departments";
+import Manage from "@/components/pages/Manage";
 
 // Create Redux store
 const store = configureStore({
@@ -140,7 +141,8 @@ function AppContent() {
             <Route index element={<Dashboard />} />
             <Route path="employees" element={<Employees />} />
             <Route path="departments" element={<Departments />} />
-            <Route path="reports" element={<Reports />} />
+<Route path="departments" element={<Departments />} />
+          <Route path="manage" element={<Manage />} />
           </Route>
         </Routes>
         
