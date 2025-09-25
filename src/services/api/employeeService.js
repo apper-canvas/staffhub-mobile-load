@@ -129,7 +129,37 @@ async create(employeeData) {
           throw new Error(errorMessage);
         }
         
-        return successful.length > 0 ? successful[0].data : null;
+        // Employee created successfully, now send SMS notification
+        const createdEmployee = successful.length > 0 ? successful[0].data : null;
+        
+        if (createdEmployee && employeeData.phone_c && employeeData.first_name_c) {
+          try {
+            // Initialize ApperClient for Edge function call
+            const { ApperClient } = window.ApperSDK;
+            const apperClient = new ApperClient({
+              apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+              apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+            });
+            
+            // Call SMS Edge function asynchronously
+            await apperClient.functions.invoke(import.meta.env.VITE_SEND_EMPLOYEE_SMS, {
+              body: JSON.stringify({
+                firstName: employeeData.first_name_c,
+                phoneNumber: employeeData.phone_c
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            console.log('SMS notification sent successfully to new employee');
+          } catch (smsError) {
+            // Log SMS error but don't fail the employee creation
+            console.error('Failed to send SMS notification:', smsError);
+          }
+        }
+        
+        return createdEmployee;
       }
       
       return null;
