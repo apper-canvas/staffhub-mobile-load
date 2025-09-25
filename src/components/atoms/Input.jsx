@@ -9,6 +9,7 @@ const Input = forwardRef(({
   error,
   icon,
   required = false,
+  value,
   ...props
 }, ref) => {
   const inputStyles = "w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 text-gray-900 placeholder-gray-500 bg-white";
@@ -29,9 +30,10 @@ const Input = forwardRef(({
           </div>
         )}
         
-        <input
+<input
           type={type}
           ref={ref}
+          value={value || ""}
           className={cn(
             inputStyles,
             icon && "pl-10",
