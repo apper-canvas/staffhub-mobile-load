@@ -88,11 +88,12 @@ class EmployeeService {
     }
   }
 
-  async create(employeeData) {
+async create(employeeData) {
     try {
+      // Ensure ApperClient is initialized
       if (!this.apperClient) this.initializeClient();
       
-      // Only include Updateable fields based on schema
+      // Only include Updateable fields based on schema - removed created_at_c and updated_at_c as they don't exist in employee_c schema
       const params = {
         records: [{
           Name: `${employeeData.first_name_c || ''} ${employeeData.last_name_c || ''}`.trim(),
@@ -105,16 +106,15 @@ class EmployeeService {
           status_c: employeeData.status_c || 'active',
           salary_c: parseInt(employeeData.salary_c) || 0,
           manager_c: employeeData.manager_c,
-          created_at_c: new Date().toISOString(),
-          updated_at_c: new Date().toISOString(),
-          department_c: parseInt(employeeData.department_c) || null
+          department_c: employeeData.department_c ? parseInt(employeeData.department_c) : null
         }]
       };
       
+      console.log('Creating employee with data:', params);
       const response = await this.apperClient.createRecord(this.tableName, params);
       
       if (!response.success) {
-        console.error(response.message);
+        console.error('API Error:', response.message);
         throw new Error(response.message);
       }
       
@@ -123,16 +123,18 @@ class EmployeeService {
         const failed = response.results.filter(r => !r.success);
         
         if (failed.length > 0) {
-          console.error(`Failed to create ${failed.length} employees:`, failed);
-          failed.forEach(record => {
-            if (record.message) throw new Error(record.message);
-          });
+          console.error(`Failed to create ${failed.length} employees:`, JSON.stringify(failed));
+          // Use the actual error message from the API response
+          const errorMessage = failed[0]?.message || failed[0]?.errors?.[0] || 'Failed to create employee';
+          throw new Error(errorMessage);
         }
         
         return successful.length > 0 ? successful[0].data : null;
       }
+      
+      return null;
     } catch (error) {
-      console.error("Error creating employee:", error?.response?.data?.message || error);
+      console.error("Error creating employee:", error?.response?.data?.message || error.message || error);
       throw error;
     }
   }

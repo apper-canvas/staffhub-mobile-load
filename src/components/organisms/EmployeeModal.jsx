@@ -95,7 +95,7 @@ if (!formData.first_name_c.trim()) newErrors.first_name_c = "First name is requi
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -106,12 +106,14 @@ if (!formData.first_name_c.trim()) newErrors.first_name_c = "First name is requi
     setLoading(true);
     
     try {
-const employeeData = {
+      // Prepare employee data - removed created_at_c and updated_at_c as they don't exist in employee_c schema
+      const employeeData = {
         ...formData,
         salary_c: parseFloat(formData.salary_c),
-        created_at_c: employee ? employee.created_at_c : new Date().toISOString(),
-        updated_at_c: new Date().toISOString()
+        department_c: formData.department_c ? parseInt(formData.department_c) : null
       };
+
+      console.log('Submitting employee data:', employeeData);
 
       let savedEmployee;
       if (employee) {
@@ -126,7 +128,9 @@ const employeeData = {
       onClose();
     } catch (error) {
       console.error("Failed to save employee:", error);
-      toast.error("Failed to save employee. Please try again.");
+      // Show the actual error message from the API
+      const errorMessage = error?.message || "Failed to save employee. Please try again.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
