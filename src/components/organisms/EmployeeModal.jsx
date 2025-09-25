@@ -187,109 +187,135 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input
-name="first_name_c"
-                      label="First Name"
-                      value={formData.first_name_c}
-                      onChange={handleInputChange}
-                      error={errors.first_name_c}
-                      required
-                      icon="User"
-                    />
+<div className="space-y-8">
+                    {/* Personal Information Section */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                        Personal Information
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Input
+                          name="first_name_c"
+                          label="First Name"
+                          value={formData.first_name_c}
+                          onChange={handleInputChange}
+                          error={errors.first_name_c}
+                          required
+                          icon="User"
+                        />
 
-                    <Input
-                      name="last_name_c"
-                      label="Last Name"
-                      value={formData.last_name_c}
-                      onChange={handleInputChange}
-                      error={errors.last_name_c}
-                      required
-                      icon="User"
-                    />
+                        <Input
+                          name="last_name_c"
+                          label="Last Name"
+                          value={formData.last_name_c}
+                          onChange={handleInputChange}
+                          error={errors.last_name_c}
+                          required
+                          icon="User"
+                        />
 
-                    <Input
-                      name="email_c"
-                      label="Email Address"
-                      type="email"
-                      value={formData.email_c}
-                      onChange={handleInputChange}
-                      error={errors.email_c}
-                      required
-                      icon="Mail"
-                    />
+                        <Input
+                          name="email_c"
+                          label="Email Address"
+                          type="email"
+                          value={formData.email_c}
+                          onChange={handleInputChange}
+                          error={errors.email_c}
+                          required
+                          icon="Mail"
+                        />
 
-                    <Input
-                      name="phone_c"
-                      label="Phone Number"
-                      value={formData.phone_c}
-                      onChange={handleInputChange}
-                      error={errors.phone_c}
-                      required
-                      icon="Phone"
-                    />
+                        <Input
+                          name="phone_c"
+                          label="Phone Number"
+                          value={formData.phone_c}
+                          onChange={handleInputChange}
+                          error={errors.phone_c}
+                          required
+                          icon="Phone"
+                        />
+                      </div>
+                    </div>
 
-                    <Input
-                      name="position_c"
-                      label="Position"
-                      value={formData.position_c}
-                      onChange={handleInputChange}
-                      error={errors.position_c}
-                      required
-                      icon="Briefcase"
-                    />
+                    {/* Work Information Section */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                        Work Information
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Input
+                          name="position_c"
+                          label="Position"
+                          value={formData.position_c}
+                          onChange={handleInputChange}
+                          error={errors.position_c}
+                          required
+                          icon="Briefcase"
+                        />
 
-                    <Select
-                      name="department_c"
-                      label="Department"
-                      value={formData.department_c}
-                      onChange={handleInputChange}
-                      options={departments}
-                      error={errors.department_c}
-                      required
-                      placeholder="Select department..."
-                    />
+                        <Select
+                          name="department_c"
+                          label="Department"
+                          value={formData.department_c}
+                          onChange={handleInputChange}
+                          options={departments}
+                          error={errors.department_c}
+                          required
+                          placeholder="Select department..."
+                        />
 
-                    <Input
-                      name="start_date_c"
-                      label="Start Date"
-                      type="date"
-                      value={formData.start_date_c}
-                      onChange={handleInputChange}
-                      error={errors.start_date_c}
-                      required
-                      icon="Calendar"
-                    />
+                        <Input
+                          name="manager_c"
+                          label="Manager"
+                          value={formData.manager_c}
+                          onChange={handleInputChange}
+                          icon="UserCheck"
+                          placeholder="Enter manager name"
+                        />
+                      </div>
+                    </div>
 
-                    <Select
-                      name="status_c"
-                      label="Status"
-                      value={formData.status_c}
-                      onChange={handleInputChange}
-                      options={statusOptions}
-                      required
-                    />
+                    {/* Employment Details Section */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+                        Employment Details
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Input
+                          name="start_date_c"
+                          label="Start Date"
+                          type="date"
+                          value={formData.start_date_c}
+                          onChange={handleInputChange}
+                          error={errors.start_date_c}
+                          required
+                          icon="Calendar"
+                        />
 
-                    <Input
-                      name="salary_c"
-                      label="Annual Salary"
-                      type="number"
-                      value={formData.salary_c}
-                      onChange={handleInputChange}
-                      error={errors.salary_c}
-                      required
-                      icon="DollarSign"
-                      placeholder="Enter salary amount"
-                    />
+                        <Select
+                          name="status_c"
+                          label="Status"
+                          value={formData.status_c}
+                          onChange={handleInputChange}
+                          options={statusOptions}
+                          required
+                        />
 
-                    <Input
-                      name="manager_c"
-                      label="Manager"
-                      value={formData.manager_c}
-                      onChange={handleInputChange}
-                      icon="UserCheck"
-                      placeholder="Enter manager name"
-                    />
+                        <div className="sm:col-span-2">
+                          <Input
+                            name="salary_c"
+                            label="Annual Salary"
+                            type="number"
+                            value={formData.salary_c}
+                            onChange={handleInputChange}
+                            error={errors.salary_c}
+                            required
+                            icon="DollarSign"
+                            placeholder="Enter salary amount"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
