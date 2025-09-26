@@ -31,15 +31,10 @@ const Empty = ({
           Start building your team by adding employee profiles. Track their information, roles, and performance all in one place.
         </p>
         
-        {action && (
-          <Button
-            onClick={action}
-            size="lg"
-            className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg hover:shadow-xl transition-all duration-200"
-          >
-            <ApperIcon name="UserPlus" size={20} className="mr-2" />
-            Add First Employee
-          </Button>
+{action && (
+          <div>
+            {action}
+          </div>
         )}
       </motion.div>
     );
@@ -86,14 +81,10 @@ const Empty = ({
       <h3 className="text-xl font-semibold text-gray-900 mb-3">{title}</h3>
       <p className="text-gray-600 mb-8 max-w-md leading-relaxed">{description}</p>
       
-      {action && (
-        <Button
-          onClick={action}
-          className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700"
-        >
-          <ApperIcon name="Plus" size={16} className="mr-2" />
-          {actionText}
-        </Button>
+{action && (
+        <div>
+          {action}
+        </div>
       )}
     </motion.div>
   );
