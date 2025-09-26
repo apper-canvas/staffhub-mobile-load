@@ -33,7 +33,9 @@ const Empty = ({
         
 {action && (
           <div>
-            {action}
+            <Button onClick={action}>
+              {actionText}
+            </Button>
           </div>
         )}
       </motion.div>
@@ -83,7 +85,9 @@ const Empty = ({
       
 {action && (
         <div>
-          {action}
+          <Button onClick={action}>
+            {actionText}
+          </Button>
         </div>
       )}
     </motion.div>
