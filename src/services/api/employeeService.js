@@ -89,6 +89,8 @@ class EmployeeService {
   }
 
 async create(employeeData) {
+    // Import logger service for activity tracking
+    const { loggerService } = await import('./loggerService.js');
     try {
       // Ensure ApperClient is initialized
       if (!this.apperClient) this.initializeClient();
@@ -158,6 +160,17 @@ async create(employeeData) {
             console.error('Failed to send SMS notification:', smsError);
           }
         }
+// Log employee creation activity
+        try {
+          await loggerService.create({
+            log_level_c: 'info',
+            message_c: `Employee created: ${employeeData.first_name_c} ${employeeData.last_name_c}`,
+            employee_c: createdEmployee?.Id,
+            Tags: 'employee,create,activity'
+          });
+        } catch (logError) {
+          console.error('Failed to log employee creation:', logError);
+        }
         
         return createdEmployee;
       }
@@ -169,7 +182,9 @@ async create(employeeData) {
     }
   }
 
-  async update(id, employeeData) {
+async update(id, employeeData) {
+    // Import logger service for activity tracking
+    const { loggerService } = await import('./loggerService.js');
     try {
       if (!this.apperClient) this.initializeClient();
       
@@ -210,7 +225,21 @@ async create(employeeData) {
           });
         }
         
-        return successful.length > 0 ? successful[0].data : null;
+const updatedEmployee = successful.length > 0 ? successful[0].data : null;
+        
+        // Log employee update activity
+        try {
+          await loggerService.create({
+            log_level_c: 'info',
+            message_c: `Employee updated: ${employeeData.first_name_c} ${employeeData.last_name_c}`,
+            employee_c: parseInt(id),
+            Tags: 'employee,update,activity'
+          });
+        } catch (logError) {
+          console.error('Failed to log employee update:', logError);
+        }
+        
+        return updatedEmployee;
       }
     } catch (error) {
       console.error("Error updating employee:", error?.response?.data?.message || error);
@@ -218,7 +247,18 @@ async create(employeeData) {
     }
   }
 
-  async delete(id) {
+async delete(id) {
+    // Import logger service for activity tracking
+    const { loggerService } = await import('./loggerService.js');
+    
+    // Get employee info before deletion for logging
+    let employeeName = 'Unknown Employee';
+    try {
+      const employee = await this.getById(id);
+      employeeName = `${employee.first_name_c || ''} ${employee.last_name_c || ''}`.trim();
+    } catch (error) {
+      console.error('Could not get employee info for logging:', error);
+    }
     try {
       if (!this.apperClient) this.initializeClient();
       
@@ -244,7 +284,19 @@ async create(employeeData) {
         }
       }
       
-      return true;
+// Log employee deletion activity
+      try {
+        await loggerService.create({
+          log_level_c: 'warning',
+          message_c: `Employee deleted: ${employeeName}`,
+          employee_c: parseInt(id),
+          Tags: 'employee,delete,activity'
+        });
+      } catch (logError) {
+        console.error('Failed to log employee deletion:', logError);
+      }
+      
+return true;
     } catch (error) {
       console.error("Error deleting employee:", error?.response?.data?.message || error);
       throw error;

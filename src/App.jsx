@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import Logger from '@/components/pages/Logger';
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -139,7 +140,8 @@ function AppContent() {
           <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
           <Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
-            <Route path="employees" element={<Employees />} />
+<Route path="employees" element={<Employees />} />
+            <Route path="logger" element={<Logger />} />
             <Route path="departments" element={<Departments />} />
 <Route path="departments" element={<Departments />} />
           <Route path="manage" element={<Manage />} />
