@@ -33,9 +33,13 @@ const Empty = ({
         
 {action && (
           <div>
-            <Button onClick={action}>
-              {actionText}
-            </Button>
+            {typeof action === 'function' ? (
+              <Button onClick={action}>
+                {actionText}
+              </Button>
+            ) : (
+              action
+            )}
           </div>
         )}
       </motion.div>
@@ -85,9 +89,13 @@ const Empty = ({
       
 {action && (
         <div>
-          <Button onClick={action}>
-            {actionText}
-          </Button>
+          {typeof action === 'function' ? (
+            <Button onClick={action}>
+              {actionText}
+            </Button>
+          ) : (
+            action
+          )}
         </div>
       )}
     </motion.div>
