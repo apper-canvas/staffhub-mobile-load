@@ -144,7 +144,7 @@ async create(employeeData) {
             });
             
             // Call SMS Edge function asynchronously
-            await apperClient.functions.invoke(import.meta.env.VITE_SEND_EMPLOYEE_SMS, {
+await apperClient.functions.invoke(import.meta.env.VITE_SEND_EMPLOYEE_SMS, {
               body: JSON.stringify({
                 firstName: employeeData.first_name_c,
                 phoneNumber: employeeData.phone_c
@@ -158,6 +158,36 @@ async create(employeeData) {
           } catch (smsError) {
             // Log SMS error but don't fail the employee creation
             console.error('Failed to send SMS notification:', smsError);
+          }
+        }
+
+        // Create contact in BoldDesk
+        if (employeeData.email_c) {
+          try {
+            const { ApperClient } = window.ApperSDK;
+            const apperClient = new ApperClient({
+              apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+              apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+            });
+
+            await apperClient.functions.invoke(import.meta.env.VITE_BOLDDESK_APIS, {
+              body: JSON.stringify({
+                firstName: employeeData.first_name_c,
+                lastName: employeeData.last_name_c,
+                email: employeeData.email_c,
+                phone: employeeData.phone_c,
+                companyName: employeeData.department_c?.Name || '',
+                jobTitle: employeeData.position_c
+              }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            
+            console.log('BoldDesk contact created successfully for new employee');
+          } catch (boldDeskError) {
+            // Log BoldDesk error but don't fail the employee creation
+            console.info(`apper_info: An error was received in this function: ${import.meta.env.VITE_BOLDDESK_APIS}. The error is: ${boldDeskError.message}`);
           }
         }
 // Log employee creation activity
